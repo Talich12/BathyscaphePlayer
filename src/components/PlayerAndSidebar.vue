@@ -124,7 +124,7 @@ export default {
       await this.fetchStreams();
 
       if (this.workingStreams.length > 0) {
-        const server = "192.168.0.197:8083";
+        const server = this.serverIP + ":8083";
         const uuid = this.workingStreams[0].uuid;
         const channel = "0";
         const source = `http://${server}/stream/${uuid}/channel/${channel}/webrtc?uuid=${uuid}/&channel=${channel}`;
@@ -141,7 +141,7 @@ export default {
     },
 
     async fetchStreams() {
-      const serverUrl = "http://192.168.0.197:8083/streams";
+      const serverUrl = "http://" + this.serverIP +":8083/streams";
       try {
         const response = await axios.get(serverUrl, {
           auth: {
@@ -201,7 +201,7 @@ export default {
       }
       this.isLoading = true;
       this.uuid = uuid;
-      const server = "192.168.0.197:8083";
+      const server = this.serverIP + ":8083";
       const channel = "0";
       const source = `http://${server}/stream/${uuid}/channel/${channel}/webrtc?uuid=${uuid}/&channel=${channel}`;
 
