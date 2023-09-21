@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "install": "git submodule init && git submodule update",
+    "install": "git submodule init && git submodule update && python3 InitConfig.py",
     "serve-front": "vue-cli-service serve",
     "serve-backend": "sh -c 'cd RTSPtoWeb && GO111MODULE=on go run *.go'",
     "serve": "sh -c 'vue-cli-service serve & cd RTSPtoWeb && GO111MODULE=on go run *.go'",

@@ -82,7 +82,6 @@ import RTSPtoWEBPlayer from "rtsptowebplayer";
 import ToggleButton from "./ToggleButton.vue";
 import SidebarItem from "./SidebarItem.vue";
 import configData from "./../../RTSPtoWeb/config.json";
-import config from "./../../config.json"
 
 export default {
   name: "PlayerVue",
@@ -228,7 +227,7 @@ export default {
   created() {
     this.initPlayer();
     this.config = configData;
-    this.serverIP = config.serverIP
+    this.serverIP = configData.server.serverIP
     this.streams = Object.entries(this.config.streams).reduce(
       (acc, [uuid, streamData]) => {
         if (streamData.channels && typeof streamData.channels === "object") {
