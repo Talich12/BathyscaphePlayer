@@ -12,6 +12,10 @@
     <div :id="elementId" />
   </div>
 
+  <div v-if="isBroken">
+    <img class="fullscreen-player" src="../source/img/no_signal.png" alt="">
+  </div>
+
   <div class="loader-container" v-if="isLoading">
     <div class="loader"></div>
     <p class="loading-text"><i class="bx bx-hourglass hourglass-tilt"></i></p>
@@ -54,8 +58,6 @@
                   :name="name"
                   :value="stream.url"
                   @click="handleStreamSelected(name)"
-                  :disabled="stream.isBroken"
-                  :class="{ 'disabled-button': stream.isBroken }"
                 >
                   <sidebar-item :name="name" :uuid="name"></sidebar-item>
                 </button>
@@ -80,6 +82,7 @@ import RTSPtoWEBPlayer from "rtsptowebplayer";
 import ToggleButton from "./ToggleButton.vue";
 import SidebarItem from "./SidebarItem.vue";
 import configData from "./../../RTSPtoWeb/config.json";
+import config from "./../../config.json"
 
 export default {
   name: "PlayerVue",
@@ -101,6 +104,10 @@ export default {
 
   data() {
     return {
+      serverIP: '',
+      isConnected: false,
+      isBroken: false,
+      isOnline: navigator.onLine,
       isLoading: false,
       config: {},
       streams: {},
@@ -118,7 +125,7 @@ export default {
       await this.fetchStreams();
 
       if (this.workingStreams.length > 0) {
-        const server = "127.0.0.1:8083";
+        const server = "192.168.0.197:8083";
         const uuid = this.workingStreams[0].uuid;
         const channel = "0";
         const source = `http://${server}/stream/${uuid}/channel/${channel}/webrtc?uuid=${uuid}/&channel=${channel}`;
@@ -130,11 +137,12 @@ export default {
         };
         this.player = new RTSPtoWEBPlayer(options);
         this.player.load(source);
+        this.isConnected = true
       }
     },
 
     async fetchStreams() {
-      const serverUrl = "http://127.0.0.1:8083/streams";
+      const serverUrl = "http://192.168.0.197:8083/streams";
       try {
         const response = await axios.get(serverUrl, {
           auth: {
@@ -185,31 +193,42 @@ export default {
     },
 
     handleStreamSelected(uuid) {
+      this.isOnline = navigator.onLine
+      if (this.filteredStreams[uuid].isBroken || !this.isOnline){
+        this.isBroken = true
+      }
+      else{
+        this.isBroken = false
+      }
       this.isLoading = true;
       this.uuid = uuid;
-      const server = "127.0.0.1:8083";
+      const server = "192.168.0.197:8083";
       const channel = "0";
       const source = `http://${server}/stream/${uuid}/channel/${channel}/webrtc?uuid=${uuid}/&channel=${channel}`;
 
-      this.player.destroy();
-
-      const options = {
-        controls: false,
-        parentElement: document.getElementById(this.elementId),
-        autoplay: true,
-      };
-      this.player = new RTSPtoWEBPlayer(options);
-      this.player.load(source);
+      if (this.isConnected){
+        this.player.destroy();
+      }
+      console.log(this.isOnline)
+      if (this.isOnline && this.workingStreams.length > 0){
+        const options = {
+          controls: false,
+          parentElement: document.getElementById(this.elementId),
+          autoplay: true,
+        };
+        this.player = new RTSPtoWEBPlayer(options);
+        this.player.load(source);
+      }
       setTimeout(() => {
-        this.isLoading = false;
-      }, 1500);
+          this.isLoading = false;
+        }, 1500);
     },
   },
 
   created() {
     this.initPlayer();
     this.config = configData;
-
+    this.serverIP = config.serverIP
     this.streams = Object.entries(this.config.streams).reduce(
       (acc, [uuid, streamData]) => {
         if (streamData.channels && typeof streamData.channels === "object") {
