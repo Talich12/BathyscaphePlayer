@@ -13,7 +13,7 @@
   </div>
 
   <div v-if="isBroken">
-    <img class="fullscreen-player" src="../source/img/no_signal.png" alt="">
+    <img class="fullscreen-image" src="../source/img/no_signal.png" alt="">
   </div>
 
   <div class="loader-container" v-if="isLoading">
@@ -33,7 +33,7 @@
           <hr class="rounded" />
           <div class="select-container">
             <div>
-              <p style="font-size: 1.2vw; color: #e2e2e2; margin-bottom: 1vh">
+              <p class="select-header">
                 Currently:
               </p>
               {{ selected }}
@@ -67,7 +67,6 @@
           <hr class="rounded" />
         </div>
       </aside>
-
       <toggle-button
         :show-sidebar="showSidebar"
         @toggle-sidebar="toggleSidebar"
@@ -124,7 +123,7 @@ export default {
       await this.fetchStreams();
 
       if (this.workingStreams.length > 0) {
-        const server = this.serverIP + ":8083";
+        const server = "192.168.0.197:8083";
         const uuid = this.workingStreams[0].uuid;
         const channel = "0";
         const source = `http://${server}/stream/${uuid}/channel/${channel}/webrtc?uuid=${uuid}/&channel=${channel}`;
@@ -141,7 +140,7 @@ export default {
     },
 
     async fetchStreams() {
-      const serverUrl = "http://" + this.serverIP +":8083/streams";
+      const serverUrl = "http://192.168.0.197:8083/streams";
       try {
         const response = await axios.get(serverUrl, {
           auth: {
@@ -201,7 +200,7 @@ export default {
       }
       this.isLoading = true;
       this.uuid = uuid;
-      const server = this.serverIP + ":8083";
+      const server = "192.168.0.197:8083";
       const channel = "0";
       const source = `http://${server}/stream/${uuid}/channel/${channel}/webrtc?uuid=${uuid}/&channel=${channel}`;
 
@@ -267,6 +266,7 @@ export default {
 <style>
 @import url("../assets/sidebar.css");
 
+
 .fullscreen-player {
   position: fixed;
   top: 0;
@@ -284,6 +284,7 @@ export default {
   position: absolute;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
   background-color: rgba(0, 0, 0, 0.6);
 }
 
@@ -332,8 +333,7 @@ export default {
 }
 
 .button-list-container {
-  height: 56vh;
-  overflow-y: auto;
+  height: auto;
   background: linear-gradient(to bottom, #11101d, #11101d);
 }
 </style>

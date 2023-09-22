@@ -88,6 +88,11 @@ body {
   color: solid;
   -webkit-text-stroke: 0.15vw #e2e2e2;
 }
+@media screen and (max-width: 480px) {
+  .content h2 {
+    font-size: 10vw;
+  }
+}
 
 .content h2:nth-child(2) {
   color: #1d1b31;
