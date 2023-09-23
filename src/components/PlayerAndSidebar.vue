@@ -50,6 +50,13 @@
             </select>
           </div>
           <hr class="rounded" />
+          <div class="fullscreen-container">
+            <button
+            @click="openFullscreen()" 
+            class="sidebar-button">FullScreen<i class='bx bx-fullscreen'></i>
+          </button>
+          </div>
+          <hr class="rounded" />
           <div class="button-list-container">
             <ul>
               <li v-for="(stream, name) in filteredStreams" :key="name">
@@ -190,6 +197,22 @@ export default {
       this.showSidebar = !this.showSidebar;
     },
 
+    openFullscreen() {
+      if (this.isBroken || !this.isOnline){
+        return
+      }
+      var player = document.getElementById(this.elementId)
+      if (player.requestFullscreen) {
+        player.requestFullscreen();
+      } else if (player.mozRequestFullScreen) { /* Firefox */
+        player.mozRequestFullScreen();
+      } else if (player.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        player.webkitRequestFullscreen();
+      } else if (player.msRequestFullscreen) { /* IE/Edge */
+        player.msRequestFullscreen();
+      }
+    },
+
     handleStreamSelected(uuid) {
       this.isOnline = navigator.onLine
       if (this.filteredStreams[uuid].isBroken || !this.isOnline){
@@ -220,7 +243,7 @@ export default {
       setTimeout(() => {
           this.isLoading = false;
         }, 1500);
-    },
+    }
   },
 
   created() {
@@ -250,7 +273,6 @@ export default {
     this.selectedDevice = this.devices[0].toString();
 
     this.fetchStreams();
-
     setInterval(() => {
       this.fetchStreams();
     }, 10000);
