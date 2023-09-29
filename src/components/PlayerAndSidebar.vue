@@ -52,6 +52,7 @@
           <hr class="rounded" />
           <div class="fullscreen-container">
             <button
+            :class="{ 'disabled-button': isBroken }"
             @click="openFullscreen()" 
             class="sidebar-button">FullScreen<i class='bx bx-fullscreen'></i>
           </button>
