@@ -17,8 +17,8 @@
       </section>
     </div>
 
-    <div class="app-container" v-show="!isLoading">
-      <Player></Player>
+    <div class="app-container">
+      <Player :loading="this.isLoading"></Player>
     </div>
   </div>
 </template>
@@ -47,6 +47,16 @@ export default {
 <style>
 @import url("assets/reset.css");
 
+.loading-screen{
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background: #1d1b31;
+}
 .app-container {
   justify-content: center;
   align-items: center;
@@ -66,7 +76,7 @@ export default {
 
 body {
   display: flex;
-  background: #1d1b31;
+  background: #11101d;
   min-height: 100vh;
   align-items: center;
   justify-content: center;

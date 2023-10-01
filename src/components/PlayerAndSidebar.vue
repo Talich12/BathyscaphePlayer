@@ -13,7 +13,11 @@
   </div>
 
   <div v-if="isBroken">
-    <img class="fullscreen-image" src="../source/img/no_signal.png" alt="">
+    <img :id="no_signal" class="fullscreen-image" v-bind:style="{height: this.height + 'px' }"  src="../source/img/no_signal.png" alt="" >
+  </div>
+
+  <div v-if="!isChoosen">
+    <img :id="no_signal" class="fullscreen-image" v-bind:style="{height: this.height + 'px' }"  src="../source/img/video.jpg" alt="" >
   </div>
 
   <div class="loader-container" v-if="isLoading">
@@ -21,7 +25,7 @@
     <p class="loading-text"><i class="bx bx-hourglass hourglass-tilt"></i></p>
   </div>
 
-  <div class="sidebar-container">
+  <div class="sidebar-container" v-bind:style="{top: this.height + 'px' }">
     <div class="sidebar-wrapper">
       <aside :class="['sidebar', { open: showSidebar, closed: !showSidebar }]">
         <div class="sidebar-background">
@@ -76,6 +80,7 @@
         </div>
       </aside>
       <toggle-button
+        v-show="!this.$props.loading"
         :show-sidebar="showSidebar"
         @toggle-sidebar="toggleSidebar"
       ></toggle-button>
@@ -108,11 +113,14 @@ export default {
     },
   },
 
+  props:['loading'],
+
   data() {
     return {
       serverIP: '',
       isConnected: false,
       isBroken: false,
+      isChoosen: false,
       isOnline: navigator.onLine,
       isLoading: false,
       config: {},
@@ -123,12 +131,12 @@ export default {
       elementId: "player",
       brokenStreams: [],
       workingStreams: [],
+      height: 0
     };
   },
 
   methods: {
-    async initPlayer() {
-      await this.fetchStreams();
+    initPlayer() {
 
       if (this.workingStreams.length > 0) {
         const server = this.serverIP + ":8083";
@@ -183,6 +191,9 @@ export default {
       } catch (error) {
         console.error("Error fetching streams:", error);
       }
+      if (!this.isConnected){
+        this.initPlayer()
+      }
     },
 
     async checkStreamStatus(url) {
@@ -216,6 +227,7 @@ export default {
 
     handleStreamSelected(uuid) {
       this.isOnline = navigator.onLine
+      this.isChoosen = true
       if (this.filteredStreams[uuid].isBroken || !this.isOnline){
         this.isBroken = true
       }
@@ -243,6 +255,21 @@ export default {
       setTimeout(() => {
           this.isLoading = false;
         }, 1500);
+    }
+  },
+
+  watch:{
+    loading: function() {
+      console.log(this.isChoosen)
+      const element = document.getElementById(this.elementId);
+      let self = this;
+
+      const resizeObserver = new ResizeObserver(function() {
+        self.height = element.scrollHeight;
+        console.log(self.height)
+      });
+
+      resizeObserver.observe(element);
     }
   },
 
