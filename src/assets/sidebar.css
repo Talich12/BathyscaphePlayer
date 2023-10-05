@@ -149,7 +149,7 @@ hr.rounded {
     bottom: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: auto;
   }
 
   .fullscreen-player{
@@ -208,7 +208,7 @@ hr.rounded {
   }
 
   .sidebar-background {
-    position: absolute;
+    overflow-y: scroll;
     width: 100vw;
     height: auto;
     top: 0;
