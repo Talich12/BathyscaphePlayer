@@ -5,7 +5,7 @@
   "scripts": {
     "serve-front": "vue-cli-service serve",
     "serve-backend": "sh -c 'cd RTSPtoWeb && GO111MODULE=on go run *.go'",
-    "serve": "sh -c 'vue-cli-service serve & cd ./../RTSPtoWeb && GO111MODULE=on go run *.go'",
+    "serve": "sh -c 'vue-cli-service serve & docker run --name rtsp-to-web -v ./config.json:/config/config.json --network host ghcr.io/deepch/rtsptoweb:latest '",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "setup": "cd src && python3 ConfigUpdate.py"

@@ -4,7 +4,7 @@ services:
     image: ghcr.io/deepch/rtsptoweb:latest
     container_name: rtsp-to-web
     volumes:
-      - ./RTSPtoWeb/config.json:/config/config.json
+      - ./front/config.json:/config/config.json
     network_mode: host
 
   client:
