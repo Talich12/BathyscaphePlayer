@@ -54,5 +54,5 @@ data = {
   }
 }
 
-with open('RTSPtoWeb/config.json', 'w') as f:
+with open('./RTSPtoWeb/config.json', 'w') as f:
     json.dump(data, f, indent=4)

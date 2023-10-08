@@ -1,0 +1,13 @@
+version: '3'
+services:
+  rtsp-to-web:
+    image: ghcr.io/deepch/rtsptoweb:latest
+    container_name: rtsp-to-web
+    volumes:
+      - ./RTSPtoWeb/config.json:/config/config.json
+    network_mode: host
+
+  client:
+    build: ./front
+    ports:
+      - "8080:8080"
